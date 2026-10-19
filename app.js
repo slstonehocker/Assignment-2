@@ -1,5 +1,6 @@
 /* Foothills Repertory Theatre — site behaviour */
 
+
 /* ---------- Seat selection ---------- */
 
 var picked = [];
@@ -12,22 +13,36 @@ function seatClicked(btn) {
 
   if (btn.getAttribute('data-state') === 'picked') {
     btn.setAttribute('data-state', 'open');
-    picked = picked.filter(function (s) { return s.label !== label; });
+    btn.setAttribute('aria-pressed', 'false');
+
+    picked = picked.filter(function (s) {
+      return s.label !== label;
+    });
   } else {
     btn.setAttribute('data-state', 'picked');
+    btn.setAttribute('aria-pressed', 'true');
+
     picked.push({ label: label, price: price });
   }
 
   var out = document.getElementById('order-summary');
   if (!out) { return; }
+
   if (picked.length === 0) {
     out.textContent = 'No seats selected.';
   } else {
-    var total = picked.reduce(function (sum, s) { return sum + s.price; }, 0);
-    var noun = picked.length === 1 ? ' seat selected, $' : ' seats selected, $';
+    var total = picked.reduce(function (sum, s) {
+      return sum + s.price;
+    }, 0);
+
+    var noun = picked.length === 1
+      ? ' seat selected, $'
+      : ' seats selected, $';
+
     out.textContent = picked.length + noun + total + '.00 total';
   }
 }
+
 
 /* ---------- Accessible seating modal ---------- */
 
